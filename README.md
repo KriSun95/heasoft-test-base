@@ -2,11 +2,13 @@
 
 A repository to test an HEASoft install to a previous one.
 
-Things to consider:
+Things to consider **before running**:
 
-* Make sure you have visited the `raw_nustar_download` directory and read the `README.md` file. We need a file _like_ `w3browse-68892.tar` in this directory containing the raw NuSTAR data.
-* Make sure your HEASoft install has been sourced and you're in an appropriate Python environment (e.g., `conda create -n heasoft-test python matplotlib numpy astropy`)."
-* Make sure this script has appropriate permissions to run (e.g., `chmod 775 ./test_new_heasoft_install.sh`), although how you could see this and this instruction still being useful is beyond me."
+1. **Make sure** you have visited the `raw_nustar_download` directory and read the `README.md` file. We need a file _like_ `w3browse-68892.tar` in this directory containing the raw NuSTAR data.
+   1.  _The file name might be different. A quick fix is to rename the file to `w3browse-68892.tar`_.
+2. **Make sure** your HEASoft install has been sourced and you're in an appropriate Python environment (e.g., `conda create -n heasoft-test python matplotlib numpy astropy`)."
+   1. _E.g., `source $HEADAS/headas-init.sh` and check that `which python3` prints out the Python interpreter of the right environment with the required packages._
+3. **Make sure** this script has appropriate permissions to run (e.g., `chmod 775 ./test_new_heasoft_install.sh`), although how you could see this and this instruction still being useful is beyond me."
 
 Run as `./test_new_heasoft_install.sh benchmark`:  
 
@@ -15,7 +17,7 @@ Run as `./test_new_heasoft_install.sh new`:
 
 * It will compare the previous results to those obtained from the new currently installed HEASoft.
   
-If you want the Xspec results printed to the screen after the testing then include `print-result`;
+If you want the XSPEC results printed to the screen after the testing then include `print-result`;
 
 * I.e., `./test_new_heasoft_install.sh benchmark print-result` or `./test_new_heasoft_install.sh new print-result`.
 

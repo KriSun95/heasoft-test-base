@@ -9,7 +9,7 @@
 #       It will run HEASoft on your current configuration and store the outputs to then compare with a new, future HEASoft configuration.
 # Run as `./test_new_heasoft_install.sh new`
 #       It will compare the previous results to those obtained from the new currently installed HEASoft.
-# If you want the Xspec results printed to the screen after the testing then include 'print-result'; 
+# If you want the XSPEC results printed to the screen after the testing then include 'print-result'; 
 #       I.e., `./test_new_heasoft_install.sh benchmark print-result` or `./test_new_heasoft_install.sh new print-result`.
 # The result is logged in the log file regardless whether they are printed to the screen.
 
@@ -25,7 +25,7 @@ function dir_exist_check() {
 }
 
 function check_benchmark() {
-    # if the new Xspec is being tested then benchmark should exist already
+    # if the new XSPEC is being tested then benchmark should exist already
     # Note: both 'benchmark' and 'new'should be exactly the same structure etc. However, the 'new'will just be compared to 'benchmark' at the end
     if [ -d $1 ]; then
     else
@@ -57,13 +57,13 @@ elif [[ $1 = "help" ]]
 then
     echo "A script to test an HEASoft install to a previous one."
     echo "Things to consider:"
-    echo "* Make sure you have visited the 'raw_nustar_download' directory and read the 'what2do.txt' file. We need a file _like_ 'w3browse-68892.tar' in this directory containing the raw NuSTAR data."
-    echo "* Make sure your HEASoft install has been sourced and you're in an appropriate Python environment (e.g., 'conda create -n heasoft-test python matplotlib numpy astropy')."
+    echo "* Make sure you have visited the 'raw_nustar_download' directory and read the 'what2do.txt' file. We need a file _like_ 'w3browse-68892.tar' in this directory containing the raw NuSTAR data (the download of the same data might have a different name, just rename the file)."
+    echo "* Make sure your HEASoft install has been sourced ('source $HEADAS/headas-init.sh') and you're in an appropriate Python environment (e.g., 'conda create -n heasoft-test python matplotlib numpy astropy' and check with 'which python3')."
     echo "* Make sure this script has appropriate permissions to run (e.g., 'chmod 775 ./test_new_heasoft_install.sh'), although how you could see this and this instruction still being useful is beyond me."
     echo ""
     echo "Run as './test_new_heasoft_install.sh benchmark':\n   * It will run HEASoft on your current configuration and store the outputs to then compare with a new, future HEASoft configuration (must be run first)."
     echo "Run as './test_new_heasoft_install.sh new':\n   * It will compare the previous results to those obtained from the new currently installed HEASoft."
-    echo "If you want the Xspec results printed to the screen after the testing then include 'print-result';\n   *I.e., './test_new_heasoft_install.sh benchmark print-result' or './test_new_heasoft_install.sh new print-result'."
+    echo "If you want the XSPEC results printed to the screen after the testing then include 'print-result';\n   *I.e., './test_new_heasoft_install.sh benchmark print-result' or './test_new_heasoft_install.sh new print-result'."
     echo "Whichever test is being run, make sure the corresponding directory (new or benchmark) doesn't already exist as the code will produce a message and not run otherwise."
     echo "The new or benchamrk directory will be created from the 'replacement_directory' folder."
     echo "Note, the result is logged in the log file regardless whether they are printed to the screen and benchmark must be run first."
@@ -71,13 +71,13 @@ then
 else
     echo "Please run './test_new_heasoft_install.sh help' or just go with the following."
     echo "Run as either:\n   *'./test_new_heasoft_install.sh benchmark' to populate folder with a \"standard\" HEASoft run.\n   *'./test_new_heasoft_install.sh new' to test new HEASoft against the \"standard\" HEASoft."
-    echo "To print the Xspec result instead of it just being shown in the log-file, include 'print-result':\n   *'./test_new_heasoft_install.sh benchmark print-result' or,\n   *'./test_new_heasoft_install.sh new print-result'."
+    echo "To print the XSPEC result instead of it just being shown in the log-file, include 'print-result':\n   *'./test_new_heasoft_install.sh benchmark print-result' or,\n   *'./test_new_heasoft_install.sh new print-result'."
     echo "Note, the benchmark must be run first."
     exit 1
 fi
 
 # add some stuff to terminal and log files
-echo "Testing will be based on the succesful execution of the code and final Xspec results." | tee -a $TERM_OUTFILE 2>&1
+echo "Testing will be based on the succesful execution of the code and final XSPEC results." | tee -a $TERM_OUTFILE 2>&1
 echo "Run Date & Time: "$(date +%d.%m.%y-%H:%M:%S) | tee -a $TERM_OUTFILE 2>&1
 
 #  only need dir structure so instead of selecting specific files to keep just delete all and replace with the bones of the structure again
@@ -192,8 +192,8 @@ normal_line cp "./nu"$OBSID"B06_cl_grade0_sr.rmf" $SCRIPT_DIR$HEASOFT_OUTPUT_FIL
 normal_line cd $SCRIPT_DIR$HEASOFT_OUTPUT_FILE"/5-xspec-test/"
 normal_lines_end
 
-# fit the data, testing Xspec
-test_line "Run Xspec code (xspec)" "python3 runXspec.py" 4 "See log files in "$SCRIPT_DIR$HEASOFT_OUTPUT_FILE"5-xspec-test directory."
+# fit the data, testing XSPEC
+test_line "Run XSPEC code (xspec)" "python3 runXspec.py" 4 "See log files in "$SCRIPT_DIR$HEASOFT_OUTPUT_FILE"5-xspec-test directory."
 
 # take the products from fitting, read to be plotted
 echo $MOVING_STUFF_LINE >> $TERM_OUTFILE 2>&1
@@ -207,10 +207,10 @@ normal_line cd $SCRIPT_DIR$HEASOFT_OUTPUT_FILE"/6-xspec-test-result/"
 normal_lines_end
 
 # plot the fits to the data, testing the output of xspec makes sense
-test_line "Plot Xspec result (xspec)" "python3 plotXspec.py" 5 "See plots in "$SCRIPT_DIR$HEASOFT_OUTPUT_FILE"6-xspec-test-result directory."
+test_line "Plot XSPEC result (xspec)" "python3 plotXspec.py" 5 "See plots in "$SCRIPT_DIR$HEASOFT_OUTPUT_FILE"6-xspec-test-result directory."
 
 # record the results other than just in the plots, can output to terminal too if 'print-result'is given too
-XSPEC_RESULT_LINE="Xspec Results:"
+XSPEC_RESULT_LINE="XSPEC Results:"
 if [[ $COMPARE_TO_BENCHMARK = "yes" ]]
 then
     # compare the 'new' HEASoft install to the benchark
