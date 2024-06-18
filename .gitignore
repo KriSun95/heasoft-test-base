@@ -1,0 +1,7 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*__pycache__/
+
+# other files
+*.log
+*.tar
