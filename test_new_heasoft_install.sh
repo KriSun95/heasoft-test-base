@@ -177,8 +177,8 @@ normal_line cd $SCRIPT_DIR$HEASOFT_OUTPUT_FILE"/3-nuscreen-test/"
 normal_lines_end
 
 # filter w.r.t. time and space, testing nuproducts
-test_line "Filter to time and region (FPMA, nuproducts)" "nuproducts indir=./ instrument=FPMA steminputs=nu"$OBSID" outdir=../4-nuproducts-timeAndSpaceSelection-test/ extended=no runmkarf=yes runmkrmf=yes infile=nu"$OBSID"A06_cl_grade0.evt bkgextract=no srcregionfile=../../analysisSelections/region/"$REGION_FILE"a.reg  attfile=./nu"$OBSID"_att.fits hkfile=./nu"$OBSID"A_fpm.hk usrgtifile=../../analysisSelections/goodTimeInterval/"$TIME_INTERVAL_FILE".fits" 3a
-test_line "Filter to time and region (FPMB, nuproducts)" "nuproducts indir=./ instrument=FPMB steminputs=nu"$OBSID" outdir=../4-nuproducts-timeAndSpaceSelection-test/ extended=no runmkarf=yes runmkrmf=yes infile=nu"$OBSID"B06_cl_grade0.evt bkgextract=no srcregionfile=../../analysisSelections/region/"$REGION_FILE"b.reg  attfile=./nu"$OBSID"_att.fits hkfile=./nu"$OBSID"B_fpm.hk usrgtifile=../../analysisSelections/goodTimeInterval/"$TIME_INTERVAL_FILE".fits" 3b
+test_line "Filter to time and region (FPMA, nuproducts)" "nuproducts indir=./ instrument=FPMA steminputs=nu"$OBSID" outdir=../4-nuproducts-timeAndSpaceSelection-test/ extended=no runmkarf=yes runmkrmf=yes infile=nu"$OBSID"A06_cl_grade0.evt bkgextract=no srcregionfile=../../analysis_selections/region/"$REGION_FILE"a.reg  attfile=./nu"$OBSID"_att.fits hkfile=./nu"$OBSID"A_fpm.hk usrgtifile=../../analysis_selections/good_time_interval/"$TIME_INTERVAL_FILE".fits" 3a
+test_line "Filter to time and region (FPMB, nuproducts)" "nuproducts indir=./ instrument=FPMB steminputs=nu"$OBSID" outdir=../4-nuproducts-timeAndSpaceSelection-test/ extended=no runmkarf=yes runmkrmf=yes infile=nu"$OBSID"B06_cl_grade0.evt bkgextract=no srcregionfile=../../analysis_selections/region/"$REGION_FILE"b.reg  attfile=./nu"$OBSID"_att.fits hkfile=./nu"$OBSID"B_fpm.hk usrgtifile=../../analysis_selections/good_time_interval/"$TIME_INTERVAL_FILE".fits" 3b
 
 # take the spectral files outputted and move them to another directory
 echo $MOVING_STUFF_LINE >> $TERM_OUTFILE 2>&1

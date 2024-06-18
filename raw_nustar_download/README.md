@@ -9,7 +9,7 @@ Download the data file through [here](https://heasarc.gsfc.nasa.gov/db-perl/W3Br
 
 - If you download different data and/or want to use different GTI and/or REG files, that is fine, don't worry. You just need to change the following variables in the shell script:
   - `DOWNLOADED_DATA`, `TIME_INTERVAL_FILE`, `REGION_FILE`, `OBSID`
-    - The `TIME_INTERVAL_FILE` and `REGION_FILE` files being pointed to live in `analysisSelections/goodTimeInterval/` and `analysisSelections/region/`, respectively
+    - The `TIME_INTERVAL_FILE` and `REGION_FILE` files being pointed to live in `analysis_selections/good_time_interval/` and `analysis_selections/region/`, respectively
   - And the file names in the `.xcm` files in the `5-xspec-test` directory
     - e.g., `data 1:1 nu<OBSID>A06_cl_grade0_sr.pha 2:2 nu<OBSID>B06_cl_grade0_sr.pha`
 
