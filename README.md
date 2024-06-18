@@ -4,7 +4,7 @@ A repository to test an HEASoft install to a previous one.
 Things to consider:
 
 * Make sure you have visited the `raw_nustar_download` directory and read the `README.md` file. We need a file _like_ `w3browse-68892.tar` in this directory containing the raw NuSTAR data.
-* Make sure your HEASoft install has been sourced and you`re in an appropriate Python environment (e.g., `conda create -n heasoft-test python matplotlib numpy astropy`)."
+* Make sure your HEASoft install has been sourced and you're in an appropriate Python environment (e.g., `conda create -n heasoft-test python matplotlib numpy astropy`)."
 * Make sure this script has appropriate permissions to run (e.g., `chmod 775 ./test_new_heasoft_install.sh`), although how you could see this and this instruction still being useful is beyond me."
 
 Run as `./test_new_heasoft_install.sh benchmark`:  
