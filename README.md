@@ -82,25 +82,25 @@ Options:
                                  - Default is:
                                    \"$REGION_FILEA\"
  -rb*, --regb-file*            Define a custom region FPMA file to use
-                                 - Default is:"
+                                 - Default is:
                                    \"$REGION_FILEB\"
  -o*, --obs-id*              Define a different NuSTAR observation ID
                                  - Default is \"80414202001\"
                                  - Must correspond to the <w3browse-*.tar> file that
                                    was downloaded
 
-Standard Eamples:"
------------------"
+Standard Eamples:
+-----------------
 ## Get script description and usage
 path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -h
 
 ## Run HEASoft on your current configuration, store the outputs, then compare with a new,
 ## future HEASoft configuration (must be run first)
 path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -b
-"
+
 ## Compare previous results to those obtained from the new currently installed HEASoft
 path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -n
-"
+
 Fancier Eamples:
 ----------------
 ## Run a benchmark and save to a folder benchmark1
