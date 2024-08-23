@@ -74,6 +74,9 @@ function usage() {
     echo ""
     echo "Be aware of Path legnths, HEASoft does _not_ like long path lengths, but only sometimes."
     echo ""
+    echo "Flags: Make sure to use the syntax \`-flag <input>\` (or just \`-flag\`, if appropriate)"
+    echo "and _not_ \`-flag=<input>\`."
+    echo ""
     echo "Usage: $0 [OPTIONS]"
     echo ""
     echo "path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> [OPTIONS]"
@@ -368,6 +371,7 @@ normal_line cp "./nu"$OBSID"B06_cl_grade0_sr.pha" $SCRIPT_DIR$HEASOFT_OUTPUT_FIL
 normal_line cp "./nu"$OBSID"B06_cl_grade0_sr.arf" $SCRIPT_DIR$HEASOFT_OUTPUT_FILE"/5-xspec-test/"
 normal_line cp "./nu"$OBSID"B06_cl_grade0_sr.rmf" $SCRIPT_DIR$HEASOFT_OUTPUT_FILE"/5-xspec-test/"
 normal_line cd $SCRIPT_DIR$HEASOFT_OUTPUT_FILE"/5-xspec-test/"
+normal_line python3  "create_xcm.py" $OBSID
 normal_lines_end
 
 # fit the data, testing XSPEC

@@ -14,7 +14,6 @@ Run as `./test_heasoft_install.sh --help` or `./test_heasoft_install.sh -h` to g
 Whichever test is being run, make sure the corresponding directory (new or benchmark) doesn`t already exist as the code will produce a message and not run otherwise.
 
 The new or benchamrk directory will be created from the `replacement_directory` folder.
-Note: The result is logged in the log file regardless whether they are printed to the screen and benchmark must be run first.
 
 ```bash
 A script to test an HEASoft install to a previous one.
@@ -38,6 +37,9 @@ doesn't already exist as the code will produce a message and not run otherwise.
 The new or benchamrk directory will be created from the 'replacement_directory' folder.
 
 Be aware of Path legnths, HEASoft does _not_ like long path lengths, but only sometimes.
+
+Flags: Make sure to use the syntax `-flag <input>` (or just `-flag`, if appropriate) 
+and _not_ `-flag=<input>`.
 
 Usage: $0 [OPTIONS]
 
@@ -111,4 +113,4 @@ path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -b -o <new_data_OBSID>
 
 ## Known Issues
 
-Running the shell script not in its directory can cause an error within HEASoft due to long path legnths (especially when appending to either the "benchmark" or "new" directories being generated). Running ths script in its own directory can help with this, although running the same command again might work for some reason..
+1. Running the shell script not in its directory can cause an error within HEASoft due to long path legnths (especially when appending to either the "benchmark" or "new" directories being generated). Running ths script in its own directory can help with this, although running the same command again might work for some reason..
