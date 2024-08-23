@@ -247,9 +247,6 @@ function handle_options() {
             -p | --print-xspec-result)
                 PRINT_XSPEC_RESULT=1
                 ;;
-            *)
-                err
-                ;;
         esac
         shift
     done
