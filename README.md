@@ -15,6 +15,8 @@ Whichever test is being run, make sure the corresponding directory (new or bench
 
 The new or benchamrk directory will be created from the `replacement_directory` folder.
 
+For links/etc. for downloading HEASoft itself see [heasoft_install_instructions](heasoft_install_instructions/README.md)
+
 ## Data Download
 
 _As described in the `raw_nustar_download` directory._
