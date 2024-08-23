@@ -37,8 +37,7 @@ doesn't already exist as the code will produce a message and not run otherwise.
 
 The new or benchamrk directory will be created from the 'replacement_directory' folder.
 
-Note: The result is logged in the log file regardless whether they are printed to the
-screen and benchmark must be run first.
+Be aware of Path legnths, HEASoft does _not_ like long path lengths, but only sometimes.
 
 Usage: $0 [OPTIONS]
 
@@ -72,17 +71,42 @@ Options:
                                  - Default is \"80414202001\"
                                  - Must correspond to the <w3browse-*.tar> file that
                                    was downloaded
- -p , --print-xspec-result   Set that the final Xspec result should be printed
 
-Generic Eamples:
+Standard Eamples:"
+-----------------"
+## Get script description and usage
+path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -h
+
 ## Run HEASoft on your current configuration, store the outputs, then compare with a new,
 ## future HEASoft configuration (must be run first)
 path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -b
-
+"
 ## Compare previous results to those obtained from the new currently installed HEASoft
 path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -n
+"
+Fancier Eamples:
+----------------
+## Run a benchmark and save to a folder benchmark1
+path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -b 1
+## or equivalently"
+ - path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> --benchmark 1
 
-Other Eamples:
+## Run a new run and save to a folder new2024-08-23
+path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -n 2024-08-23
+
+## Run a new run and save to a folder new2024-09 and compare to a benchamrk folder
+## called benchmark2 (the order of the flags does not matter)
+path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -b 2 -n 2024-09
+
+## Run a new run and save to a folder new2024-081 and compare to a benchamrk folder
+## called benchmark1, while pointing to a new time interval and region files (the
+## order of the flags does not matter)
+path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -n 2024-081 -b 1\ 
+                                -g path/to/time_gti_file.fits -ra path/to/reg_file.reg\ 
+                                -rb path/to/reg_file.reg
+
+## Run a benchmark with downloaded data that has a different NuSTAR OBSID
+path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -b -o <new_data_OBSID>
 ```
 
 ## Known Issues

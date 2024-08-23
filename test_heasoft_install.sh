@@ -3,16 +3,6 @@
 # may need to: conda create -n heasoft-test python matplotlib numpy astropy
 # and also: chmod 775 ./test_heasoft_install.sh
 
-# run ./test_heasoft_install.sh help
-# A script to test an HEASoft install to a previous one. 
-# Run as `./test_heasoft_install.sh benchmark`
-#       It will run HEASoft on your current configuration and store the outputs to then compare with a new, future HEASoft configuration.
-# Run as `./test_heasoft_install.sh new`
-#       It will compare the previous results to those obtained from the new currently installed HEASoft.
-# If you want the XSPEC results printed to the screen after the testing then include 'print-result'; 
-#       I.e., `./test_heasoft_install.sh benchmark print-result` or `./test_heasoft_install.sh new print-result`.
-# The result is logged in the log file regardless whether they are printed to the screen.
-
 #  change to the main directory to work in
 SCRIPT_DIR=$( cd -- "$( dirname -- "${(%):-%N}" )" &> /dev/null && pwd )
 
@@ -21,15 +11,27 @@ TIME_INTERVAL_FILE=$SCRIPT_DIR"/analysis_selections/good_time_interval/time_gti.
 REGION_FILEA=$SCRIPT_DIR"/analysis_selections/region/reg_fpma.reg"
 REGION_FILEB=$SCRIPT_DIR"/analysis_selections/region/reg_fpmb.reg"
 OBSID="80414202001"
+
 BENCHMARK_DIR="/benchmark"
 BENCHMARK_DIR_EXT=""
 COMPARE_TO_BENCHMARK="no"
-PRINT_XSPEC_RESULT=0
 
 function dir_exist_check() {
     # if this dir exists then don't want to overwrite so produce warning for user to delete if necessary
     if [ -d "$1" ]; then
         echo "$1 files exist. Please delete the '$SCRIPT_DIR$1' directory and try again."
+        exit 1
+    fi
+}
+
+function check_obsid_dir() {
+    # if the OBSID folder doesn't exist then it's likely the OBSID and the downloaded data don't match
+    if [ -d $1 ]; then
+    else
+        echo "OBSID folder does not exist. This could be due to a mis-match between the"
+        echo "OBSID being used and the downloaded data, please check."
+        echo "OBSID in use: $OBSID"
+        echo "DOWNLOADED_DATA in use: $DOWNLOADED_DATA"
         exit 1
     fi
 }
@@ -54,9 +56,9 @@ function usage() {
     echo ""
     echo "Things to consider:"
     echo " * Make sure you have visited the 'raw_nustar_download' directory and read the"
-    echo "   'what2do.txt' file. We need a file _like_ 'w3browse-68892.tar' in this directory"
-    echo "   containing the raw NuSTAR data (the download of the same data might have a"
-    echo "   different name, just rename the file)."
+    echo "   'what2do.txt' file. We need a file _like_ 'w3browse-68892.tar' which can be placed"
+    echo "   in this directory for convenience (the download of the same data might have a"
+    echo "   different name)."
     echo " * Make sure your HEASoft install has been sourced ('source /path/to/headas-init.sh')"
     echo "   and you're in an appropriate Python environment, e.g.,"
     echo "   'conda create -n heasoft-test python matplotlib numpy astropy' and check with"
@@ -70,8 +72,7 @@ function usage() {
     echo ""
     echo "The new or benchamrk directory will be created from the 'replacement_directory' folder."
     echo ""
-    echo "Note: The result is logged in the log file regardless whether they are printed to the"
-    echo "screen and benchmark must be run first."
+    echo "Be aware of Path legnths, HEASoft does _not_ like long path lengths, but only sometimes."
     echo ""
     echo "Usage: $0 [OPTIONS]"
     echo ""
@@ -105,9 +106,12 @@ function usage() {
     echo "                                 - Default is \"80414202001\""
     echo "                                 - Must correspond to the <w3browse-*.tar> file that"
     echo "                                   was downloaded"
-    echo " -p , --print-xspec-result   Set that the final Xspec result should be printed"
     echo ""
-    echo "Generic Eamples:"
+    echo "Standard Eamples:"
+    echo "-----------------"
+    echo "## Get script description and usage"
+    echo "path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -h"
+    echo ""
     echo "## Run HEASoft on your current configuration, store the outputs, then compare with a new,"
     echo "## future HEASoft configuration (must be run first)"
     echo "path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -b"
@@ -115,7 +119,29 @@ function usage() {
     echo "## Compare previous results to those obtained from the new currently installed HEASoft"
     echo "path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -n"
     echo ""
-    echo "Other Eamples:"
+    echo "Fancier Eamples:"
+    echo "----------------"
+    echo "## Run a benchmark and save to a folder benchmark1"
+    echo "path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -b 1"
+    echo "## or equivalently"
+    echo " - path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> --benchmark 1"
+    echo ""
+    echo "## Run a new run and save to a folder new2024-08-23"
+    echo "path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -n 2024-08-23"
+    echo ""
+    echo "## Run a new run and save to a folder new2024-09 and compare to a benchamrk folder"
+    echo "## called benchmark2 (the order of the flags does not matter)"
+    echo "path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -b 2 -n 2024-09"
+    echo ""
+    echo "## Run a new run and save to a folder new2024-081 and compare to a benchamrk folder"
+    echo "## called benchmark1, while pointing to a new time interval and region files (the"
+    echo "## order of the flags does not matter)"
+    echo "path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -n 2024-081 -b 1\ "
+    echo "                                -g path/to/time_gti_file.fits -ra path/to/reg_file.reg\ "
+    echo "                                -rb path/to/reg_file.reg"
+    echo ""
+    echo "## Run a benchmark with downloaded data that has a different NuSTAR OBSID"
+    echo "path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -b -o <new_data_OBSID>"
     echo ""
 }
 
@@ -202,7 +228,6 @@ function handle_options() {
             -n* | --new*)
                 # Test new configuration
                 COMPARE_TO_BENCHMARK="yes"
-                echo $BEGIN_STATEMENT"starting HEASoft processing to test against cached examples." | tee $TERM_OUTFILE 2>&1
 
                 if ! has_argument $@; then
                     HEASOFT_OUTPUT_FILE="/new"
@@ -212,6 +237,7 @@ function handle_options() {
                     TERM_OUTFILE=$SCRIPT_DIR"/run_new"$(extract_argument $@)"_heasoft_install.log"
                 fi
                 dir_exist_check $SCRIPT_DIR$HEASOFT_OUTPUT_FILE
+                echo $BEGIN_STATEMENT"starting HEASoft processing to test against cached examples." | tee $TERM_OUTFILE 2>&1
                 ;;
             -g* | --gti-file*)
                 if ! has_argument $@; then
@@ -245,9 +271,6 @@ function handle_options() {
                 fi
                 OBSID=$(extract_argument $@)
                 ;;
-            -p | --print-xspec-result)
-                PRINT_XSPEC_RESULT=1
-                ;;
         esac
         shift
     done
@@ -269,14 +292,22 @@ else
     # Get benchmark for how HEASoft should be
     # only want to run this is -n is not given
     TERM_OUTFILE=$SCRIPT_DIR"/run_benchmark"$BENCHMARK_DIR_EXT"_heasoft_install.log"
-    echo $BEGIN_STATEMENT"starting HEASoft install to create cached examples." | tee $TERM_OUTFILE 2>&1
     HEASOFT_OUTPUT_FILE=$BENCHMARK_DIR
     dir_exist_check $SCRIPT_DIR$HEASOFT_OUTPUT_FILE
+    echo $BEGIN_STATEMENT"starting HEASoft install to create cached examples." | tee $TERM_OUTFILE 2>&1
 fi
 
 # add some stuff to terminal and log files
 echo "Testing will be based on the succesful execution of the code and final XSPEC results." | tee -a $TERM_OUTFILE 2>&1
 echo "Run Date & Time: "$(date +%d.%m.%y-%H:%M:%S) | tee -a $TERM_OUTFILE 2>&1
+
+echo "\n" >> $TERM_OUTFILE 2>&1
+echo "Details being used are:" >> $TERM_OUTFILE 2>&1
+echo "DOWNLOADED_DATA: $DOWNLOADED_DATA" >> $TERM_OUTFILE 2>&1
+echo "OBSID: $OBSID" >> $TERM_OUTFILE 2>&1
+echo "TIME_INTERVAL_FILE: $TIME_INTERVAL_FILE" >> $TERM_OUTFILE 2>&1
+echo "REGION_FILEA: $REGION_FILEA" >> $TERM_OUTFILE 2>&1
+echo "REGION_FILEB: $REGION_FILEA" >> $TERM_OUTFILE 2>&1
 
 #  only need dir structure so instead of selecting specific files to keep just delete all and replace with the bones of the structure again
 echo "\n\n" >> $TERM_OUTFILE 2>&1
@@ -295,8 +326,10 @@ normal_line cp $DOWNLOADED_DATA "./"
 normal_line tar -xf $DOWNLOADED_DATA_FILE
 normal_line gunzip -r $OBSID
 normal_line rm $DOWNLOADED_DATA_FILE
+check_obsid_dir $OBSID
 normal_line cd $OBSID 
 normal_lines_end
+
 
 # test nupipeline
 test_line "Get orbit and CHU EVT files (nupipeline)" "nupipeline obsmode=SCIENCE_SC indir=$FIRST_FILES_DIR/$OBSID steminputs=nu$OBSID outdir=event_cl entrystage=1 exitstage=2 pntra=OBJECT pntdec=OBJECT statusexpr=$STATUSEXPR cleanflick=no hkevtexpr=NONE clobber=yes runsplitsc=yes splitmode=STRICT" 1
@@ -362,21 +395,17 @@ then
     echo $XSPEC_RESULT_LINE >> $TERM_OUTFILE 2>&1
     normal_line python3 "getXspecParameters.py" "compare" "$BENCHMARK_DIR"
     normal_lines_end
-    if [[ $PRINT_XSPEC_RESULT = 1 ]]
-    then
-        echo $XSPEC_RESULT_LINE 
-        python3 "getXspecParameters.py" "compare" "$BENCHMARK_DIR"
-    fi
+
+    echo $XSPEC_RESULT_LINE 
+    python3 "getXspecParameters.py" "compare" "$BENCHMARK_DIR"
 else
     # Just run the benchmark so nothing to compare to
     echo $XSPEC_RESULT_LINE >> $TERM_OUTFILE 2>&1
     normal_line python3 "getXspecParameters.py" "no-compare"
     normal_lines_end
-    if [[ $PRINT_XSPEC_RESULT = 1 ]]
-    then
-        echo $XSPEC_RESULT_LINE 
-        python3 "getXspecParameters.py" "no-compare"
-    fi
+
+    echo $XSPEC_RESULT_LINE 
+    python3 "getXspecParameters.py" "no-compare"
 fi
 
 # final line
