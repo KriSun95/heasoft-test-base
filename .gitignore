@@ -5,3 +5,7 @@ __pycache__/
 # other files
 *.log
 *.tar
+
+# other folders
+benchmark*/
+new*/

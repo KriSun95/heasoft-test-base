@@ -22,6 +22,7 @@ REGION_FILEA=$SCRIPT_DIR"/analysis_selections/region/reg_fpma.reg"
 REGION_FILEB=$SCRIPT_DIR"/analysis_selections/region/reg_fpmb.reg"
 OBSID="80414202001"
 BENCHMARK_DIR=$SCRIPT_DIR"/benchmark"
+BENCHMARK_DIR_EXT=""
 COMPARE_TO_BENCHMARK="no"
 PRINT_XSPEC_RESULT=0
 
@@ -131,8 +132,8 @@ function err() {
 # <ANSI_color_code> if 0--255
 DEFAULT_C="\e[0m"
 RUNNING_C="\e[48;5;30m"
-PASSED_C="\e[48;5;10m"
-FAILED_C="\e[48;5;9m"
+PASSED_C="\e[48;5;148m"
+FAILED_C="\e[48;5;1m"
 
 function test_line() {
     ## save me from writing out running/passed/failed and file management all the time
@@ -193,22 +194,22 @@ function handle_options() {
                 exit 0
                 ;;
             -b* | --benchmark*)
-                if ! has_argument $@; then
-                    BENCHMARK_DIR="/benchmark"
-                else
+                if has_argument $@; then
                     BENCHMARK_DIR="/benchmark"$(extract_argument $@)
+                    BENCHMARK_DIR_EXT=$(extract_argument $@)
                 fi
                 ;;
             -n* | --new*)
                 # Test new configuration
-                TERM_OUTFILE=$SCRIPT_DIR"/test_heasoft_install.log"
                 COMPARE_TO_BENCHMARK="yes"
                 echo $BEGIN_STATEMENT"starting HEASoft processing to test against cached examples." | tee $TERM_OUTFILE 2>&1
 
                 if ! has_argument $@; then
                     HEASOFT_OUTPUT_FILE="/new"
+                    TERM_OUTFILE=$SCRIPT_DIR"/run_new_heasoft_install.log"
                 else
                     HEASOFT_OUTPUT_FILE="/new"$(extract_argument $@)
+                    TERM_OUTFILE=$SCRIPT_DIR"/run_new"$(extract_argument $@)"_heasoft_install.log"
                 fi
                 dir_exist_check $SCRIPT_DIR$HEASOFT_OUTPUT_FILE
                 ;;
@@ -267,9 +268,9 @@ if [[ $COMPARE_TO_BENCHMARK = "yes" ]] then
 else
     # Get benchmark for how HEASoft should be
     # only want to run this is -n is not given
-    TERM_OUTFILE=$SCRIPT_DIR"/run_benchmark_heasoft_install.log"
+    TERM_OUTFILE=$SCRIPT_DIR"/run_benchmark"$BENCHMARK_DIR_EXT"_heasoft_install.log"
     echo $BEGIN_STATEMENT"starting HEASoft install to create cached examples." | tee $TERM_OUTFILE 2>&1
-    $HEASOFT_OUTPUT_FILE=$BENCHMARK_DIR
+    HEASOFT_OUTPUT_FILE=$BENCHMARK_DIR
     dir_exist_check $SCRIPT_DIR$HEASOFT_OUTPUT_FILE
 fi
 
