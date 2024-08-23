@@ -333,16 +333,15 @@ check_obsid_dir $OBSID
 normal_line cd $OBSID 
 normal_lines_end
 
-
 # test nupipeline
-test_line "Get orbit and CHU EVT files (nupipeline)" "nupipeline obsmode=SCIENCE_SC indir=$FIRST_FILES_DIR/$OBSID steminputs=nu$OBSID outdir=event_cl entrystage=1 exitstage=2 pntra=OBJECT pntdec=OBJECT statusexpr=$STATUSEXPR cleanflick=no hkevtexpr=NONE clobber=yes runsplitsc=yes splitmode=STRICT" 1
+test_line "Get orbit and CHU EVT files (nupipeline)     " "nupipeline obsmode=SCIENCE_SC indir=$FIRST_FILES_DIR/$OBSID steminputs=nu$OBSID outdir=event_cl entrystage=1 exitstage=2 pntra=OBJECT pntdec=OBJECT statusexpr=$STATUSEXPR cleanflick=no hkevtexpr=NONE clobber=yes runsplitsc=yes splitmode=STRICT" 1
 
 # move directory to where the event files are
 normal_line cd "./event_cl"
 
 # screen the event files, testing nuscreen
-test_line "Screen counts to grade 0 (FPMA, nuscreen)" "nuscreen infile=nu"$OBSID"A06_cl.evt gtiscreen=no evtscreen=yes gtiexpr=NONE gradeexpr=0 statusexpr=NONE outdir="$SCRIPT_DIR$HEASOFT_OUTPUT_FILE"/3-nuscreen-test/ hkfile=./nu"$OBSID"A_fpm.hk outfile=nu"$OBSID"A06_cl_grade0.evt" 2a
-test_line "Screen counts to grade 0 (FPMB, nuscreen)" "nuscreen infile=nu"$OBSID"B06_cl.evt gtiscreen=no evtscreen=yes gtiexpr=NONE gradeexpr=0 statusexpr=NONE outdir="$SCRIPT_DIR$HEASOFT_OUTPUT_FILE"/3-nuscreen-test/ hkfile=./nu"$OBSID"B_fpm.hk outfile=nu"$OBSID"B06_cl_grade0.evt" 2b
+test_line "Screen counts to grade 0 (FPMA, nuscreen)   " "nuscreen infile=nu"$OBSID"A06_cl.evt gtiscreen=no evtscreen=yes gtiexpr=NONE gradeexpr=0 statusexpr=NONE outdir="$SCRIPT_DIR$HEASOFT_OUTPUT_FILE"/3-nuscreen-test/ hkfile=./nu"$OBSID"A_fpm.hk outfile=nu"$OBSID"A06_cl_grade0.evt" 2a
+test_line "Screen counts to grade 0 (FPMB, nuscreen)   " "nuscreen infile=nu"$OBSID"B06_cl.evt gtiscreen=no evtscreen=yes gtiexpr=NONE gradeexpr=0 statusexpr=NONE outdir="$SCRIPT_DIR$HEASOFT_OUTPUT_FILE"/3-nuscreen-test/ hkfile=./nu"$OBSID"B_fpm.hk outfile=nu"$OBSID"B06_cl_grade0.evt" 2b
 
 # get ready to filter with time and space so move the files needed to de-clutter
 echo $MOVING_STUFF_LINE >> $TERM_OUTFILE 2>&1
@@ -375,7 +374,7 @@ normal_line python3  "create_xcm.py" $OBSID
 normal_lines_end
 
 # fit the data, testing XSPEC
-test_line "Run XSPEC code (xspec)" "python3 runXspec.py" 4 "See log files in "$SCRIPT_DIR$HEASOFT_OUTPUT_FILE"5-xspec-test directory."
+test_line "Run XSPEC code (xspec)                       " "python3 runXspec.py" 4 "See log files in "$SCRIPT_DIR$HEASOFT_OUTPUT_FILE"5-xspec-test directory."
 
 # take the products from fitting, read to be plotted
 echo $MOVING_STUFF_LINE >> $TERM_OUTFILE 2>&1
@@ -389,7 +388,7 @@ normal_line cd $SCRIPT_DIR$HEASOFT_OUTPUT_FILE"/6-xspec-test-result/"
 normal_lines_end
 
 # plot the fits to the data, testing the output of xspec makes sense
-test_line "Plot XSPEC result (xspec)" "python3 plotXspec.py" 5 "See plots in "$SCRIPT_DIR$HEASOFT_OUTPUT_FILE"6-xspec-test-result directory."
+test_line "Plot XSPEC result (xspec)                    " "python3 plotXspec.py" 5 "See plots in "$SCRIPT_DIR$HEASOFT_OUTPUT_FILE"6-xspec-test-result directory."
 
 # record the results other than just in the plots, can output to terminal too if 'print-result'is given too
 XSPEC_RESULT_LINE="XSPEC Results:"

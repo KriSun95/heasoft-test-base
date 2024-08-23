@@ -15,6 +15,21 @@ Whichever test is being run, make sure the corresponding directory (new or bench
 
 The new or benchamrk directory will be created from the `replacement_directory` folder.
 
+## Data Download
+
+_As described in the `raw_nustar_download` directory._
+
+Download the data file through [here](https://heasarc.gsfc.nasa.gov/db-perl/W3Browse/w3table.pl?tablehead=name%3Dnumaster&Action=More+Options)
+
+For deafult behaviour that will behave with the provided GTI and REG files:
+
+- Search with ObsID: 80414202001
+- Select the observation, hit `Retrieve`, and then download the file from the link.
+
+If you download different data and/or want to use different GTI and/or REG files, that is fine, don't worry. Follow the help documentation for the shell script.
+
+## Usage
+
 ```bash
 A script to test an HEASoft install to a previous one.
 
