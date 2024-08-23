@@ -1,24 +1,22 @@
 #!/bin/zsh
 
 # may need to: conda create -n heasoft-test python matplotlib numpy astropy
-# and also: chmod 775 ./test_new_heasoft_install.sh
+# and also: chmod 775 ./test_heasoft_install.sh
 
-# run ./test_new_heasoft_install.sh help
+# run ./test_heasoft_install.sh help
 # A script to test an HEASoft install to a previous one. 
-# Run as `./test_new_heasoft_install.sh benchmark`
+# Run as `./test_heasoft_install.sh benchmark`
 #       It will run HEASoft on your current configuration and store the outputs to then compare with a new, future HEASoft configuration.
-# Run as `./test_new_heasoft_install.sh new`
+# Run as `./test_heasoft_install.sh new`
 #       It will compare the previous results to those obtained from the new currently installed HEASoft.
 # If you want the XSPEC results printed to the screen after the testing then include 'print-result'; 
-#       I.e., `./test_new_heasoft_install.sh benchmark print-result` or `./test_new_heasoft_install.sh new print-result`.
+#       I.e., `./test_heasoft_install.sh benchmark print-result` or `./test_heasoft_install.sh new print-result`.
 # The result is logged in the log file regardless whether they are printed to the screen.
 
 #  change to the main directory to work in
 SCRIPT_DIR=$( cd -- "$( dirname -- "${(%):-%N}" )" &> /dev/null && pwd )
 
 # set up some defaults
-DOWNLOADED_DATA=$1 # "w3browse-68892.tar"
-DOWNLOADED_DATA_FILE=$(basename "$DOWNLOADED_DATA")
 TIME_INTERVAL_FILE=$SCRIPT_DIR"/analysis_selections/good_time_interval/time_gti.fits"
 REGION_FILEA=$SCRIPT_DIR"/analysis_selections/region/reg_fpma.reg"
 REGION_FILEB=$SCRIPT_DIR"/analysis_selections/region/reg_fpmb.reg"
@@ -42,35 +40,12 @@ function check_benchmark() {
     else
         echo "Benchmark files do not exist. Please try to populate benchmark files in the"
         echo "'$SCRIPT_DIR'"
-        echo "Run path/to/test_new_heasoft_install.sh with -h or --help for instructions."
+        echo "Run path/to/test_heasoft_install.sh with -h or --help for instructions."
         exit 1
     fi
 }
 
 BEGIN_STATEMENT="HEASoft should already be initialised by you, "
-# run as ./test_new_heasoft_install.sh -h and the $1 here is -h, use flags to either run current HEASoft install or to test files made from new HEASoft configuration against files from the old/current configuration 
-if [[ $1 = "benchmark" ]]
-then
-    # Get benchmark for how HEASoft should be
-    TERM_OUTFILE=$SCRIPT_DIR"/run_benchmark_heasoft_install.log"
-    HEASOFT_OUTPUT_FILE="/benchmark"
-    COMPARE_TO_BENCHMARK="no"
-    dir_exist_check $SCRIPT_DIR$HEASOFT_OUTPUT_FILE
-    echo $BEGIN_STATEMENT"starting HEASoft install to create cached examples." | tee $TERM_OUTFILE 2>&1
-elif [[ $1 = "new" ]]
-then
-    # Test new configuration
-    TERM_OUTFILE=$SCRIPT_DIR"/test_new_heasoft_install.log"
-    HEASOFT_OUTPUT_FILE="/new"
-    COMPARE_TO_BENCHMARK="yes"
-    dir_exist_check $SCRIPT_DIR$HEASOFT_OUTPUT_FILE
-    check_benchmark $SCRIPT_DIR"/benchmark"
-    echo $BEGIN_STATEMENT"starting HEASoft processing to test against cached examples." | tee $TERM_OUTFILE 2>&1
-else
-    echo "Please run 'path/to/test_new_heasoft_install.sh -h' or"
-    echo "'path/to/test_new_heasoft_install.sh --help'."
-    exit 1
-fi
 
 function usage() {
     echo ""
@@ -86,7 +61,7 @@ function usage() {
     echo "   'conda create -n heasoft-test python matplotlib numpy astropy' and check with"
     echo "   'which python3')."
     echo " * Make sure this script has appropriate permissions to run (e.g.,"
-    echo "   'chmod 775 ./test_new_heasoft_install.sh'), although how you could see this and"
+    echo "   'chmod 775 ./test_heasoft_install.sh'), although how you could see this and"
     echo "   this instruction still being useful is beyond me."
     echo ""
     echo "Whichever test is being run, make sure the corresponding directory (new or benchmark)"
@@ -99,7 +74,7 @@ function usage() {
     echo ""
     echo "Usage: $0 [OPTIONS]"
     echo ""
-    echo "path/to/test_new_heasoft_install.sh <path/to/w3browse-*.tar> [OPTIONS]"
+    echo "path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> [OPTIONS]"
     echo ""
     echo "Options:"
     echo " -h ,  --help                Display this help message"
@@ -134,13 +109,21 @@ function usage() {
     echo "Generic Eamples:"
     echo "## Run HEASoft on your current configuration, store the outputs, then compare with a new,"
     echo "## future HEASoft configuration (must be run first)"
-    echo "path/to/test_new_heasoft_install.sh <path/to/w3browse-*.tar> -b"
+    echo "path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -b"
     echo ""
     echo "## Compare previous results to those obtained from the new currently installed HEASoft"
-    echo "path/to/test_new_heasoft_install.sh <path/to/w3browse-*.tar> -n"
+    echo "path/to/test_heasoft_install.sh <path/to/w3browse-*.tar> -n"
     echo ""
     echo "Other Eamples:"
     echo ""
+}
+
+function err() {
+    echo "Error in use."
+    echo "Please run:"
+    echo " - 'path/to/test_heasoft_install.sh -h', or"
+    echo " - 'path/to/test_heasoft_install.sh --help'."
+    exit 1
 }
 
 # \e[<fg_bg>;5;<ANSI_color_code>m
@@ -218,7 +201,7 @@ function handle_options() {
                 ;;
             -n* | --new*)
                 # Test new configuration
-                TERM_OUTFILE=$SCRIPT_DIR"/test_new_heasoft_install.log"
+                TERM_OUTFILE=$SCRIPT_DIR"/test_heasoft_install.log"
                 COMPARE_TO_BENCHMARK="yes"
                 echo $BEGIN_STATEMENT"starting HEASoft processing to test against cached examples." | tee $TERM_OUTFILE 2>&1
 
@@ -264,6 +247,9 @@ function handle_options() {
             -p | --print-xspec-result)
                 PRINT_XSPEC_RESULT=1
                 ;;
+            *)
+                err
+                ;;
         esac
         shift
     done
@@ -271,6 +257,12 @@ function handle_options() {
 
 ## go through the inputs and set things up
 handle_options "$@"
+
+DOWNLOADED_DATA=$1 # "w3browse-68892.tar"
+DOWNLOADED_DATA_FILE=$(basename "$DOWNLOADED_DATA")
+if [[ $DOWNLOADED_DATA = "" ]] then
+    err
+fi
 
 # if it's a new run, make sure the benchmark dir being pointed to exists
 if [[ $COMPARE_TO_BENCHMARK = "yes" ]] then
