@@ -21,7 +21,7 @@ TIME_INTERVAL_FILE=$SCRIPT_DIR"/analysis_selections/good_time_interval/time_gti.
 REGION_FILEA=$SCRIPT_DIR"/analysis_selections/region/reg_fpma.reg"
 REGION_FILEB=$SCRIPT_DIR"/analysis_selections/region/reg_fpmb.reg"
 OBSID="80414202001"
-BENCHMARK_DIR=$SCRIPT_DIR"/benchmark"
+BENCHMARK_DIR="/benchmark"
 BENCHMARK_DIR_EXT=""
 COMPARE_TO_BENCHMARK="no"
 PRINT_XSPEC_RESULT=0
@@ -132,7 +132,7 @@ function err() {
 # <ANSI_color_code> if 0--255
 DEFAULT_C="\e[0m"
 RUNNING_C="\e[48;5;30m"
-PASSED_C="\e[48;5;148m"
+PASSED_C="\e[48;5;28m"
 FAILED_C="\e[48;5;1m"
 
 function test_line() {
@@ -264,7 +264,7 @@ fi
 
 # if it's a new run, make sure the benchmark dir being pointed to exists
 if [[ $COMPARE_TO_BENCHMARK = "yes" ]] then
-    check_benchmark $BENCHMARK_DIR
+    check_benchmark $SCRIPT_DIR$BENCHMARK_DIR
 else
     # Get benchmark for how HEASoft should be
     # only want to run this is -n is not given
@@ -280,7 +280,7 @@ echo "Run Date & Time: "$(date +%d.%m.%y-%H:%M:%S) | tee -a $TERM_OUTFILE 2>&1
 
 #  only need dir structure so instead of selecting specific files to keep just delete all and replace with the bones of the structure again
 echo "\n\n" >> $TERM_OUTFILE 2>&1
-cp -R $SCRIPT_DIR"/replacement_directory" $SCRIPT_DIR$HEASOFT_OUTPUT_FILE
+normal_line cp -R $SCRIPT_DIR"/replacement_directory" $SCRIPT_DIR$HEASOFT_OUTPUT_FILE
 echo "\n\n" >> $TERM_OUTFILE 2>&1
 
 # some other variables
@@ -360,12 +360,12 @@ if [[ $COMPARE_TO_BENCHMARK = "yes" ]]
 then
     # compare the 'new' HEASoft install to the benchark
     echo $XSPEC_RESULT_LINE >> $TERM_OUTFILE 2>&1
-    normal_line python3 "getXspecParameters.py" "compare" "$$BENCHMARK_DIR"
+    normal_line python3 "getXspecParameters.py" "compare" "$BENCHMARK_DIR"
     normal_lines_end
     if [[ $PRINT_XSPEC_RESULT = 1 ]]
     then
         echo $XSPEC_RESULT_LINE 
-        python3 "getXspecParameters.py" "compare" "$$BENCHMARK_DIR"
+        python3 "getXspecParameters.py" "compare" "$BENCHMARK_DIR"
     fi
 else
     # Just run the benchmark so nothing to compare to
