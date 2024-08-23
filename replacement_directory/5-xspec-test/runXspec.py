@@ -1,5 +1,3 @@
-import matplotlib.pyplot as plt
-
 from subprocessXspec import XSPECfit
 
 

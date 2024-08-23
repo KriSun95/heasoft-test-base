@@ -1,3 +1,4 @@
+
 ########################################################
 ## Fit one NuSTAR FPM with single thermal APEC model 
 ## with the new Feld 92A coronal abundances - this is actual solar coronal, unlike "abund feld" in xspec
@@ -10,7 +11,7 @@
 ########################################################
 
 ## Name of the pha file 
-data 1:1 nu80414202001B06_cl_grade0_sr.pha
+data 1:1 nu105B06_cl_grade0_sr.pha
 
 ## Use the c-stat for fitting 
 statistic cstat
