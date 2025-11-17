@@ -310,7 +310,7 @@ echo "DOWNLOADED_DATA: $DOWNLOADED_DATA" >> $TERM_OUTFILE 2>&1
 echo "OBSID: $OBSID" >> $TERM_OUTFILE 2>&1
 echo "TIME_INTERVAL_FILE: $TIME_INTERVAL_FILE" >> $TERM_OUTFILE 2>&1
 echo "REGION_FILEA: $REGION_FILEA" >> $TERM_OUTFILE 2>&1
-echo "REGION_FILEB: $REGION_FILEA" >> $TERM_OUTFILE 2>&1
+echo "REGION_FILEB: $REGION_FILEB" >> $TERM_OUTFILE 2>&1
 
 #  only need dir structure so instead of selecting specific files to keep just delete all and replace with the bones of the structure again
 echo "\n\n" >> $TERM_OUTFILE 2>&1
